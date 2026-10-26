@@ -1,0 +1,13 @@
+{
+  "input_file": {"path": "examples/sample_nodeset.xml"},
+  "target_standard": {"bundle_id": "default_bundle", "bundle_path": "config/default_bundle.json"},
+  "options": {
+    "mode": "review",
+    "include_canonical_model": true,
+    "include_mapping_results": true,
+    "include_review_queue": true,
+    "include_unmapped_nodes": true,
+    "enable_semantic_alignment": false,
+    "semantic_mode": "off"
+  }
+}

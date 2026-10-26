@@ -1,0 +1,1 @@
+"""Validated data contracts for the NodeSet conversion pipeline."""

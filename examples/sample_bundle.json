@@ -1,0 +1,67 @@
+{
+  "bundle_id": "sample_bundle",
+  "bundle_name": "Sample Process Asset Profile (Demonstration)",
+  "version": "2.0.0",
+  "meta": {"description": "Compact illustrative profile for tests and examples; not a normative vocabulary.", "language": "en", "conformance_claim": "none"},
+  "standards_registry": [
+    {"standard_id": "OPC-10000-3", "edition": "OPC UA 1.05 family; verify exact revision", "uri": "https://reference.opcfoundation.org/specs/OPC-10000-3", "scope": "OPC UA Address Space Model", "applicability": "source-model interpretation"},
+    {"standard_id": "OPC-10000-5", "edition": "OPC UA 1.05 family; verify exact revision", "uri": "https://reference.opcfoundation.org/specs/OPC-10000-5", "scope": "OPC UA Information Model", "applicability": "type and property context"},
+    {"standard_id": "IEC-62264-1", "edition": "IEC 62264-1:2013, Edition 2; confirm current status", "uri": "https://www.iso.org/standard/57308.html", "scope": "Enterprise-control integration and equipment hierarchy terminology", "applicability": "target hierarchy design; profile mapping is local"},
+    {"standard_id": "UCUM", "edition": "UCUM 2.2 (2024-06-17)", "uri": "https://ucum.org/ucum", "scope": "Machine-readable unit codes", "applicability": "listed unit identifiers only; no full parser or converter"},
+    {"standard_id": "OPC-40223", "edition": "OPC UA for Pumps and Vacuum Pumps; verify exact revision", "uri": "https://reference.opcfoundation.org/specs/OPC-40223", "scope": "Pump companion information model", "applicability": "reference when source profile is in scope; no conformance claim"}
+  ],
+  "structure_schema": {
+    "schema_id": "urn:example:sample-bundle:hierarchy:2",
+    "levels": ["Site", "Area", "Line", "Equipment", "Variable"],
+    "level_definitions": {"Site": "Plant/site boundary.", "Area": "Site subdivision.", "Line": "Project-specific production grouping, not a universal IEC class.", "Equipment": "Physical or logical asset.", "Variable": "Asset-associated measurement, state, command, or setpoint."},
+    "allowed_parent_levels": {"Site": [], "Area": ["Site"], "Line": ["Area"], "Equipment": ["Line", "Equipment"], "Variable": ["Equipment"]},
+    "profile_level_mappings": [{"source_term": "Production Line", "target_level": "Line", "mapping_kind": "profile_mapping", "review_required": true}],
+    "fallback_policy": {"unresolved_parent": "Keep unassigned; do not guess."}
+  },
+  "entity_types": [
+    {"code": "Reactor", "label": "Reactor", "definition": "Process vessel in which a transformation occurs.", "aliases": ["reactor", "vessel", "reactor vessel"], "regex": ["\\breactor\\b", "\\bvessel\\b"], "node_classes": ["Object"], "compatible_parent_codes": [], "source_references": ["IEC-62264-1"], "mapping_kind": "local_profile_concept", "status": "active"},
+    {"code": "Pump", "label": "Pump", "definition": "Equipment that moves fluid by adding energy.", "aliases": ["pump", "pmp", "transfer pump"], "regex": ["\\bpump\\b", "\\bpmp\\b"], "node_classes": ["Object"], "compatible_parent_codes": [], "source_references": ["OPC-40223", "IEC-62264-1"], "mapping_kind": "local_profile_concept", "status": "active"},
+    {"code": "Motor", "label": "Electric motor", "definition": "Equipment converting electrical energy into mechanical motion.", "aliases": ["motor", "drive motor"], "regex": ["\\b(motor|drive)\\b"], "node_classes": ["Object"], "compatible_parent_codes": ["Pump"], "source_references": ["IEC-62264-1"], "mapping_kind": "local_profile_concept", "status": "active"},
+    {"code": "Valve", "label": "Valve", "definition": "Equipment regulating or directing fluid flow.", "aliases": ["valve", "control valve"], "regex": ["\\bvalve\\b"], "node_classes": ["Object"], "compatible_parent_codes": [], "source_references": ["IEC-62264-1"], "mapping_kind": "local_profile_concept", "status": "active"}
+  ],
+  "variable_semantics": [
+    {"code": "OutletTemperature", "label": "Outlet temperature", "definition": "Temperature at an outlet location; require directional/context evidence.", "aliases": ["outlet temperature", "outlet temp", "t out"], "regex": ["(t[_ ]?out|outlet).*temp"], "quantity_kind": "thermodynamic temperature", "physical_dimension": "Theta", "data_types": ["Double", "Float", "i=11", "i=10"], "units": ["Cel", "K"], "compatible_entities": ["Reactor", "Pump"], "measurement_role": "measurement", "direction": "outlet", "sibling_hints": ["pressure", "flow"], "source_references": ["OPC-10000-5", "UCUM"], "mapping_kind": "profile_semantic", "status": "active"},
+    {"code": "Temperature", "label": "Temperature", "definition": "Temperature where no more specific location or role is evidenced.", "aliases": ["temperature", "temp"], "regex": ["\\b(temp|temperature)\\b"], "quantity_kind": "thermodynamic temperature", "physical_dimension": "Theta", "data_types": ["Double", "Float", "i=11", "i=10"], "units": ["Cel", "K"], "compatible_entities": ["Reactor", "Pump"], "measurement_role": "measurement", "direction": "unspecified", "sibling_hints": [], "source_references": ["OPC-10000-5", "UCUM"], "mapping_kind": "profile_semantic", "status": "active"},
+    {"code": "Pressure", "label": "Pressure", "definition": "Process pressure; reference type and location need source context.", "aliases": ["pressure", "p discharge", "p disch"], "regex": ["\\bpressure\\b", "p[_ ]?(disch|out)"], "quantity_kind": "pressure", "physical_dimension": "M L-1 T-2", "data_types": ["Double", "Float", "i=11", "i=10"], "units": ["Pa", "kPa", "bar"], "compatible_entities": ["Reactor", "Pump"], "measurement_role": "measurement", "direction": "requires context", "sibling_hints": ["temperature", "flow"], "source_references": ["OPC-10000-5", "UCUM"], "mapping_kind": "profile_semantic", "status": "active"},
+    {"code": "MotorSpeed", "label": "Motor rotational speed", "definition": "Motor or shaft rotations per time; distinguish from angular velocity.", "aliases": ["motor speed", "speed", "rpm", "n motor"], "regex": ["\\b(speed|rpm)\\b", "n[_ ]?motor"], "quantity_kind": "rotational frequency", "physical_dimension": "T-1", "data_types": ["Double", "Float", "i=11", "i=10"], "units": ["min-1"], "compatible_entities": ["Pump", "Motor"], "measurement_role": "measurement", "direction": "not applicable", "sibling_hints": ["motor current", "power", "run status"], "source_references": ["OPC-10000-5", "UCUM"], "mapping_kind": "profile_semantic", "status": "active"},
+    {"code": "FlowRate", "label": "Volumetric flow rate", "definition": "Volume per time; do not conflate with mass flow.", "aliases": ["flow rate", "volumetric flow", "flow"], "regex": ["\\b(flow|flowrate)\\b"], "quantity_kind": "volume flow rate", "physical_dimension": "L3 T-1", "data_types": ["Double", "Float", "i=11", "i=10"], "units": ["m3/s", "m3/h", "L/min"], "compatible_entities": ["Reactor", "Pump", "Valve"], "measurement_role": "measurement", "direction": "requires context", "sibling_hints": ["pressure", "temperature"], "source_references": ["OPC-10000-5", "UCUM"], "mapping_kind": "profile_semantic", "status": "active"},
+    {"code": "RunStatus", "label": "Run status", "definition": "Explicit equipment operating state; do not infer from speed alone.", "aliases": ["run status", "running", "run state"], "regex": ["\\b(run.?status|run.?state|running)\\b"], "quantity_kind": "equipment state", "physical_dimension": "not applicable", "data_types": ["Boolean", "i=1"], "units": [], "compatible_entities": ["Pump", "Motor"], "measurement_role": "state", "direction": "not applicable", "sibling_hints": ["motor speed", "current"], "source_references": ["OPC-10000-5"], "mapping_kind": "profile_semantic", "status": "active"}
+  ],
+  "unit_dictionary": {
+    "Cel": {"code_system": "UCUM", "quantity_kind": "thermodynamic temperature", "physical_dimension": "Theta", "aliases": ["degC", "°C", "Celsius"]},
+    "K": {"code_system": "UCUM", "quantity_kind": "thermodynamic temperature", "physical_dimension": "Theta", "aliases": ["kelvin"]},
+    "Pa": {"code_system": "UCUM", "quantity_kind": "pressure", "physical_dimension": "M L-1 T-2", "aliases": ["pascal"]},
+    "kPa": {"code_system": "UCUM", "quantity_kind": "pressure", "physical_dimension": "M L-1 T-2", "aliases": ["kilopascal", "kilopascals"]},
+    "bar": {"code_system": "UCUM", "quantity_kind": "pressure", "physical_dimension": "M L-1 T-2", "aliases": []},
+    "min-1": {"code_system": "UCUM", "quantity_kind": "rotational frequency", "physical_dimension": "T-1", "aliases": ["rpm", "r/min", "1/min", "rev/min"]},
+    "m3/s": {"code_system": "UCUM", "quantity_kind": "volume flow rate", "physical_dimension": "L3 T-1", "aliases": ["m^3/s", "m³/s"]},
+    "m3/h": {"code_system": "UCUM", "quantity_kind": "volume flow rate", "physical_dimension": "L3 T-1", "aliases": ["m^3/h", "m³/h"]},
+    "L/min": {"code_system": "UCUM", "quantity_kind": "volume flow rate", "physical_dimension": "L3 T-1", "aliases": ["l/min", "liter per minute"]}
+  },
+  "alias_sets": {"Reactor": ["reactor vessel"], "Pump": ["pmp"], "Motor": ["drive motor"], "Valve": ["control valve"], "OutletTemperature": ["t outlet", "outlet temp"], "Temperature": ["temp"], "Pressure": ["p disch"], "MotorSpeed": ["n motor", "rpm"], "FlowRate": ["vol flow"], "RunStatus": ["run state"]},
+  "rules": {
+    "score_weights": {"alias": 0.3, "regex": 0.2, "datatype": 0.1, "unit": 0.1, "parent": 0.2, "sibling": 0.1},
+    "missing_evidence_score": 0.5,
+    "top_k": 6,
+    "hard_constraints": ["data_type", "engineering_unit", "parent_entity"],
+    "data_type_aliases": {"1": "boolean", "10": "float", "11": "double"},
+    "candidate_policy": "Only declared active bundle concepts are eligible.",
+    "evidence_policy": "Missing evidence receives a neutral midpoint; conflicts in configured hard constraints exclude candidates.",
+    "semantic_ambiguity_margin": 0.1
+  },
+  "output_contract": {"format": "opcua-standard-json", "version": "2.0", "required_artifacts": ["standard_model.json", "mapping_results.json", "review_queue.json", "unmapped_nodes.json", "result_package.json"], "optional_artifacts": ["canonical_model.json"], "required_hierarchy_levels": ["Site", "Area", "Line", "Equipment", "Variable"], "candidate_code_policy": "Bundle codes only.", "provenance_policy": "Preserve source NodeId and evidence; label synthetic fallbacks."},
+  "review_policy": {
+    "auto_accept_threshold": 0.9,
+    "review_threshold": 0.65,
+    "reject_threshold": 0.4,
+    "boundary_precedence": "auto_accepted >= auto threshold; else needs_review >= review threshold; else rejected < reject threshold; otherwise unmapped.",
+    "mandatory_review_triggers": ["semantic ambiguity", "candidate tie", "unit or data-type conflict", "unresolved parent", "synthetic hierarchy fallback", "bundle_gap", "semantic fallback"],
+    "strict_mode": "Only auto_accepted records enter standard_model.",
+    "agent_review": {"required": true, "agent_verdicts": ["confirmed", "incorrect", "ambiguous", "insufficient_evidence", "bundle_gap"]}
+  }
+}

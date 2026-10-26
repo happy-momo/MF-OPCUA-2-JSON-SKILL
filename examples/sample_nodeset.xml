@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UANodeSet xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris><Uri>urn:example:plant</Uri></NamespaceUris>
+  <UAObject NodeId="ns=2;s=Reactor1" BrowseName="2:Reactor1">
+    <DisplayName>Reactor 1</DisplayName><Description>Batch reactor vessel</Description>
+    <References><Reference ReferenceType="i=47">ns=2;s=Reactor1.T_Out_102</Reference><Reference ReferenceType="i=47">ns=2;s=Reactor1.Pressure</Reference><Reference ReferenceType="i=47">ns=2;s=Pump01</Reference></References>
+  </UAObject>
+  <UAVariable NodeId="ns=2;s=Reactor1.T_Out_102" BrowseName="2:T_Out_102" DataType="i=11" ValueRank="-1" AccessLevel="3">
+    <DisplayName>Outlet Temp</DisplayName><Description>Reactor outlet temperature</Description><EngineeringUnit>degC</EngineeringUnit>
+    <References><Reference ReferenceType="i=47" IsForward="false">ns=2;s=Reactor1</Reference></References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;s=Reactor1.Pressure" BrowseName="2:Pressure" DataType="i=11" ValueRank="-1" AccessLevel="3">
+    <DisplayName>Pressure</DisplayName><Description>Reactor vessel pressure</Description><EngineeringUnit>kPa</EngineeringUnit>
+    <References><Reference ReferenceType="i=47" IsForward="false">ns=2;s=Reactor1</Reference></References>
+  </UAVariable>
+  <UAObject NodeId="ns=2;s=Pump01" BrowseName="2:Pump01">
+    <DisplayName>Pump 01</DisplayName><Description>Transfer pump</Description>
+    <References><Reference ReferenceType="i=47" IsForward="false">ns=2;s=Reactor1</Reference><Reference ReferenceType="i=47">ns=2;s=Pump01.n_motor</Reference></References>
+  </UAObject>
+  <UAVariable NodeId="ns=2;s=Pump01.n_motor" BrowseName="2:n_motor" DataType="i=11" ValueRank="-1" AccessLevel="3">
+    <DisplayName>Motor RPM</DisplayName><Description>Drive motor rotational speed</Description><EngineeringUnit>rpm</EngineeringUnit>
+    <References><Reference ReferenceType="i=47" IsForward="false">ns=2;s=Pump01</Reference></References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;s=Pump01.P_Disch" BrowseName="2:P_Disch" DataType="i=11" ValueRank="-1" AccessLevel="3">
+    <DisplayName>Discharge pressure</DisplayName><Description>Pump discharge pressure</Description><EngineeringUnit>kPa</EngineeringUnit>
+    <References><Reference ReferenceType="i=47" IsForward="false">ns=2;s=Pump01</Reference></References>
+  </UAVariable>
+</UANodeSet>
