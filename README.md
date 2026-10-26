@@ -2,7 +2,7 @@
 
 Chinese version: [README.zh-CN.md](README.zh-CN.md)
 
-A deterministic offline conversion pipeline for OPC UA NodeSet2 XML. The project parses source facts, builds a canonical model, matches each node against a validated standard bundle, and emits structured mapping and review artifacts. The semantic review is intentionally separated from the converter: an agent or human reviewer inspects the generated evidence, checks context, and decides whether the mapping is valid before accepting it as a standard interpretation.
+A manufacturing-focused Agent Skill for OPC UA semantic alignment and information-model transformation. It helps bridge vendor-specific NodeSet2 XML and a selected, versioned target profile: extracting source-model facts, mapping equipment and process signals to bundle concepts, and producing traceable JSON evidence for agent-led review.
 
 The project is designed for traceability rather than blind automation. It does not call an external model API or require an online service. Instead, it emits explainable outputs that can be reviewed after each run.
 
@@ -24,16 +24,17 @@ The project is designed for traceability rather than blind automation. It does n
 
 ## Why this project exists
 
-Most OPC UA XML exports are noisy, loosely structured, and ambiguous. Tag names, descriptions, hierarchy, units, and data types often do not map one-to-one to a target industrial model. This project exists to provide a disciplined pipeline:
+Manufacturing environments bring together equipment, control systems, and information models from different vendors and generations. Even when systems use OPC UA, names, type definitions, hierarchy, and engineering units can differ enough to make cross-system integration, asset-model reuse, and trustworthy analytics labor-intensive.
 
-- parse OPC UA facts from XML
-- normalize source structure into a canonical model
-- constrain mapping to a known bundle allowlist
-- score candidate meanings using deterministic rules
-- emit review triggers for ambiguous or conflicting cases
-- keep a clear separation between conversion and semantic audit
+This Skill gives an agent a repeatable way to turn a NodeSet2 export into a profile-specific, reviewable mapping package. Its value for manufacturing teams is to:
 
-This makes it suitable for model-driven engineering workflows, industrial data harmonization, and human-in-the-loop semantic review.
+- **Reduce repetitive integration work** by extracting source facts and organizing candidate mappings in a consistent workflow.
+- **Make semantics easier to reuse** by aligning equipment and process signals to an explicit target bundle rather than relying on vendor-specific names alone.
+- **Expose data-quality risks early** by surfacing missing concepts, uncertain hierarchy, candidate ambiguity, and unit or data-type conflicts for review.
+- **Improve traceability** by retaining source NodeIds, mapping evidence, bundle versions, and run metadata in machine-readable outputs.
+- **Keep engineering decisions under control** by separating deterministic conversion from agent or human validation, and by never inventing target codes.
+
+The result is an auditable starting point for manufacturing data harmonization—not an automatic certification of a model, a replacement for domain experts, or a guarantee of conformance to a standard. Mapping quality depends on the source NodeSet and the completeness and provenance of the selected bundle.
 
 ## Key capabilities
 
