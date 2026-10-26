@@ -328,10 +328,6 @@ This project is designed to be adapted by teams that need:
 
 Contributions are welcome when they improve determinism, evidence quality, bundle coverage, or review clarity.
 
-## License
-
-No `LICENSE` file is currently present. Until one is added, do not assume that the repository grants an open-source license or redistribution rights.
-
 ## Summary
 
 This project is best understood as a deterministic OPC UA mapping pipeline with an explicit agent-review layer. It provides machine-readable evidence, review-oriented outputs, and a disciplined semantic workflow that is suitable for industrial data-model harmonization and human-in-the-loop auditing.
