@@ -55,14 +55,19 @@ def map_model(canonical, bundle, semantic_mode: str = "off", semantic_adapter=No
         entity_selected = entity_candidates[0] if entity_candidates else None
 
         variable_candidates = map_variable(features, bundle) if node.node_class == "Variable" else []
-        if variable_candidates:
-            semantic = align_semantically(features, parent_resolution, features["sibling_names"], variable_candidates, bundle, semantic_mode, semantic_adapter)
+        if node.node_class == "Variable":
+            semantic_candidates = variable_candidates or [
+                score_candidate(features, entry, bundle.alias_sets, bundle.rules.get("score_weights"), bundle.unit_dictionary, bundle.rules)
+                for entry in eligible_candidates(bundle.variable_semantics, features)
+            ]
+            semantic = align_semantically(features, parent_resolution, features["sibling_names"], semantic_candidates, bundle, semantic_mode, semantic_adapter)
         else:
             semantic = {"candidate_mappings": [], "selected_candidate": None, "semantic_alignment_used": False, "semantic_mode": semantic_mode, "semantic_candidates": [], "semantic_reasoning": [], "semantic_score": None, "fallback_triggered": False}
+            semantic_candidates = []
         selected = semantic.get("selected_candidate")
         selected_code = selected.get("code") if selected else (entity_selected or {}).get("code")
         score = selected.get("score") if selected else (entity_selected or {}).get("score")
-        relevant_candidates = variable_candidates if node.node_class == "Variable" else entity_candidates
+        relevant_candidates = semantic_candidates if node.node_class == "Variable" else entity_candidates
         selected_candidate = selected if node.node_class == "Variable" else entity_selected
         candidate_entries = bundle.variable_semantics if node.node_class == "Variable" else bundle.entity_types
         eligible_entries = eligible_candidates(candidate_entries, features)
