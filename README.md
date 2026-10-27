@@ -1,4 +1,4 @@
-# OPC UA NodeSet2 to Standard JSON
+# OPC UA NodeSet2 to Standard JSON -  Traceable semantic alignment and information-model transformation for manufacturing systems
 
 Chinese version: [README.zh-CN.md](README.zh-CN.md)
 
